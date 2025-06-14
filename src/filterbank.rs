@@ -136,6 +136,19 @@ mod tests {
     }
 
     #[test]
+    fn test_note_index_case_insensitive() {
+        assert_eq!(note_index("C"), Some(0));
+        assert_eq!(note_index("F#"), Some(6));
+        assert_eq!(note_index("Gb"), Some(6));
+    }
+
+    #[test]
+    fn test_note_index_invalid() {
+        assert_eq!(note_index("e#"), None);
+        assert_eq!(note_index("r"), None);
+    }
+
+    #[test]
     fn test_filterbank_scale() {
         let sr = 48000.0;
         let mut fb = FilterBank::new(sr, &["c", "g"]);
@@ -147,6 +160,60 @@ mod tests {
         assert!(fb.active.contains(&2));
         assert!(fb.active.contains(&4));
         assert!(!fb.active.contains(&0));
+    }
+
+    #[test]
+    fn test_filter_count() {
+        let fb = FilterBank::new(44100.0, &["c"]);
+        assert_eq!(fb.filters.len(), 108);
+    }
+
+    #[test]
+    fn test_set_scale_duplicates() {
+        let mut fb = FilterBank::new(44100.0, &["c", "c", "d"]);
+        assert_eq!(fb.active.len(), 2);
+        fb.set_scale(&["e", "e"]);
+        assert_eq!(fb.active.len(), 1);
+        assert!(fb.active.contains(&4));
+    }
+
+    #[test]
+    fn test_process_sample_zero() {
+        let mut fb = FilterBank::new(44100.0, &["c"]);
+        assert_eq!(fb.process_sample(0.0), 0.0);
+    }
+
+    #[test]
+    fn test_process_sample_no_active() {
+        let mut fb = FilterBank::new(44100.0, &[]);
+        assert_eq!(fb.process_sample(1.0), 0.0);
+    }
+
+    #[test]
+    fn test_process_sample_single_note_nonzero() {
+        let mut fb = FilterBank::new(44100.0, &["c"]);
+        assert!(fb.process_sample(1.0) != 0.0);
+    }
+
+    #[test]
+    fn test_set_scale_empty() {
+        let mut fb = FilterBank::new(44100.0, &["c"]);
+        fb.set_scale(&[]);
+        assert!(fb.active.is_empty());
+    }
+
+    #[test]
+    fn test_set_scale_invalid_names() {
+        let mut fb = FilterBank::new(44100.0, &["x"]);
+        assert!(fb.active.is_empty());
+    }
+
+    #[test]
+    fn test_process_sample_after_scale_change() {
+        let mut fb = FilterBank::new(44100.0, &["c"]);
+        fb.process_sample(1.0);
+        fb.set_scale(&["d"]);
+        assert!(fb.process_sample(1.0) != 0.0);
     }
 }
 
