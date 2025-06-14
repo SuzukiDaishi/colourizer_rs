@@ -104,7 +104,7 @@ impl FilterBank {
             let out = filter.process(input);
             sum += out * self.gains[*idx as usize];
         }
-        sum
+        sum / self.filters.len() as f32
     }
 }
 
@@ -179,5 +179,12 @@ mod tests {
     fn test_process_sample_single_note_nonzero() {
         let mut fb = FilterBank::new(44100.0);
         assert!(fb.process_sample(1.0) != 0.0);
+    }
+
+    #[test]
+    fn test_process_sample_amplitude_not_increased() {
+        let mut fb = FilterBank::new(44100.0);
+        let out = fb.process_sample(1.0);
+        assert!(out.abs() <= 1.0);
     }
 }
