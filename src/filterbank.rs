@@ -48,6 +48,7 @@ impl PeakFilter {
 }
 
 /// Convert a note name to a semitone index from C.
+#[cfg(test)]
 fn note_index(name: &str) -> Option<u8> {
     match name.to_ascii_lowercase().as_str() {
         "c" => Some(0),
