@@ -1,0 +1,8 @@
+# やることリスト
+
+- [x] Rust プロジェクトのビルドとテスト
+- [x] VST3 バンドルの生成
+- [x] Python/Pedalboard を用いた動作確認
+- [x] テスト結果の記録 `test_results.md`
+- [x] README 更新
+- [x] テスト計画 `test_plan.md` の作成
