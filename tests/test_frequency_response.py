@@ -2,8 +2,8 @@ import numpy as np
 from scipy.signal import lfilter
 
 SR = 44100
-Q = 300.0
-GAIN_DB = 40.0
+Q = 100.0
+GAIN_DB = 20.0
 A = 10 ** (GAIN_DB / 40)
 
 
