@@ -1,14 +1,21 @@
 use nih_plug::prelude::*;
 use std::sync::Arc;
 
+use crate::filterbank::FilterBank;
+
 pub mod filterbank;
 
 // This is a shortened version of the gain example with most comments removed, check out
 // https://github.com/robbert-vdh/nih-plug/blob/master/plugins/examples/gain/src/lib.rs to get
 // started
 
+const DEFAULT_SCALE: [&str; 7] = ["c", "d", "e", "f", "g", "a", "b"];
+
 struct ColourizerRs {
     params: Arc<ColourizerRsParams>,
+    filterbank_l: FilterBank,
+    filterbank_r: FilterBank,
+    sample_rate: f32,
 }
 
 #[derive(Params)]
@@ -23,8 +30,12 @@ struct ColourizerRsParams {
 
 impl Default for ColourizerRs {
     fn default() -> Self {
+        let sample_rate = 44_100.0;
         Self {
             params: Arc::new(ColourizerRsParams::default()),
+            filterbank_l: FilterBank::new(sample_rate, &DEFAULT_SCALE),
+            filterbank_r: FilterBank::new(sample_rate, &DEFAULT_SCALE),
+            sample_rate,
         }
     }
 }
@@ -104,18 +115,18 @@ impl Plugin for ColourizerRs {
     fn initialize(
         &mut self,
         _audio_io_layout: &AudioIOLayout,
-        _buffer_config: &BufferConfig,
+        buffer_config: &BufferConfig,
         _context: &mut impl InitContext<Self>,
     ) -> bool {
-        // Resize buffers and perform other potentially expensive initialization operations here.
-        // The `reset()` function is always called right after this function. You can remove this
-        // function if you do not need it.
+        self.sample_rate = buffer_config.sample_rate;
+        self.filterbank_l = FilterBank::new(self.sample_rate, &DEFAULT_SCALE);
+        self.filterbank_r = FilterBank::new(self.sample_rate, &DEFAULT_SCALE);
         true
     }
 
     fn reset(&mut self) {
-        // Reset buffers and envelopes here. This can be called from the audio thread and may not
-        // allocate. You can remove this function if you do not need it.
+        self.filterbank_l = FilterBank::new(self.sample_rate, &DEFAULT_SCALE);
+        self.filterbank_r = FilterBank::new(self.sample_rate, &DEFAULT_SCALE);
     }
 
     fn process(
@@ -124,12 +135,16 @@ impl Plugin for ColourizerRs {
         _aux: &mut AuxiliaryBuffers,
         _context: &mut impl ProcessContext<Self>,
     ) -> ProcessStatus {
-        for channel_samples in buffer.iter_samples() {
-            // Smoothing is optionally built into the parameters themselves
+        for mut samples in buffer.iter_samples() {
             let gain = self.params.gain.smoothed.next();
 
-            for sample in channel_samples {
-                *sample *= gain;
+            for (chan_idx, sample) in samples.iter_mut().enumerate() {
+                let processed = match chan_idx {
+                    0 => self.filterbank_l.process_sample(*sample),
+                    1 => self.filterbank_r.process_sample(*sample),
+                    _ => *sample,
+                };
+                *sample = processed * gain;
             }
         }
 
