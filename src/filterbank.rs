@@ -1,7 +1,7 @@
 // Filter bank for pitchmap-like effect
 
-/// Simple peaking biquad filter.
-/// Coefficients are calculated for unity gain or attenuation.
+/// Peaking biquad filter used to construct narrow band-pass responses.
+/// A high positive gain combined with a large `Q` yields a sharp peak.
 #[derive(Clone, Copy)]
 struct PeakFilter {
     b0: f32,
@@ -14,7 +14,7 @@ struct PeakFilter {
 }
 
 impl PeakFilter {
-    /// Create a new peaking filter with the given parameters.
+    /// Create a new peaking filter.
     fn new(freq: f32, q: f32, gain_db: f32, sample_rate: f32) -> Self {
         let a = 10.0_f32.powf(gain_db / 40.0);
         let w0 = 2.0 * std::f32::consts::PI * freq / sample_rate;
@@ -67,7 +67,7 @@ fn note_index(name: &str) -> Option<u8> {
     }
 }
 
-/// Filter bank with a peak filter for each note from C0 to B8.
+/// Filter bank with a peaking filter for each note from C0 to B8.
 pub struct FilterBank {
     filters: Vec<(u8, PeakFilter)>,
     gains: [f32; 12],
@@ -83,7 +83,8 @@ impl FilterBank {
         for midi in 12u8..=119u8 {
             let freq = 440.0_f32 * 2.0_f32.powf((midi as f32 - 69.0) / 12.0);
             let idx = midi % 12;
-            let filter = PeakFilter::new(freq, 12.0, 0.0, sample_rate);
+            // Use a very sharp peak to approximate a band-pass filter.
+            let filter = PeakFilter::new(freq, 300.0, 40.0, sample_rate);
             filters.push((idx, filter));
         }
 
@@ -101,11 +102,14 @@ impl FilterBank {
     /// Process a single sample through the filter bank.
     pub fn process_sample(&mut self, input: f32) -> f32 {
         let mut sum = 0.0;
+        let mut gain_sum = 0.0;
         for (idx, filter) in &mut self.filters {
+            let g = self.gains[*idx as usize];
             let out = filter.process(input);
-            sum += out * self.gains[*idx as usize];
+            sum += out * g;
+            gain_sum += g;
         }
-        sum / self.filters.len() as f32
+        sum - gain_sum * input
     }
 }
 
@@ -176,24 +180,59 @@ mod tests {
         assert_eq!(fb.process_sample(1.0), 0.0);
     }
 
-    #[test]
-    fn test_process_sample_single_note_nonzero() {
-        let mut fb = FilterBank::new(44100.0);
-        assert!(fb.process_sample(1.0) != 0.0);
+    fn process_sine(freq: f32, enabled_note: usize) -> f32 {
+        let sr = 44100.0;
+        let mut fb = FilterBank::new(sr);
+        let mut gains = [0.0_f32; 12];
+        gains[enabled_note] = 1.0;
+        fb.set_gains(gains);
+
+        let samples = 44_100;
+        let mut out_sum = 0.0;
+        for n in 0..samples {
+            let t = n as f32 / sr;
+            let input = (2.0 * std::f32::consts::PI * freq * t).sin();
+            out_sum += fb.process_sample(input).abs();
+        }
+        out_sum / samples as f32
     }
 
     #[test]
-    fn test_process_sample_amplitude_not_increased() {
-        let mut fb = FilterBank::new(44100.0);
-        let out = fb.process_sample(1.0);
-        assert!(out.abs() <= 1.0);
+    fn test_sine_enabled_passes() {
+        // A4 ~ 440Hz corresponds to index 9
+        let avg = process_sine(440.0, 9);
+        assert!(avg > 1.0);
     }
 
     #[test]
-    fn test_process_sample_amplitude_unity() {
-        let mut fb = FilterBank::new(44100.0);
-        fb.set_gains([1.0; 12]);
-        let out = fb.process_sample(1.0);
-        assert!((out - 1.0).abs() <= 0.0001);
+    fn test_sine_disabled_blocks() {
+        // Same sine but with all notes disabled
+        let sr = 44100.0;
+        let mut fb = FilterBank::new(sr);
+        fb.set_gains([0.0; 12]);
+        let samples = 44_100;
+        let mut out_sum = 0.0;
+        for n in 0..samples {
+            let t = n as f32 / sr;
+            let input = (2.0 * std::f32::consts::PI * 440.0 * t).sin();
+            out_sum += fb.process_sample(input).abs();
+        }
+        let avg = out_sum / samples as f32;
+        assert!(avg < 1e-6);
+    }
+
+    #[test]
+    fn test_sine_wrong_note_blocks() {
+        // 440Hz should be suppressed when only C (index 0) is enabled
+        let avg = process_sine(440.0, 0);
+        assert!(avg < 1.0);
+    }
+
+    #[test]
+    fn test_nearby_frequency_attenuated() {
+        // 450Hz should be much quieter than 440Hz when A4 is enabled
+        let pass = process_sine(440.0, 9);
+        let off = process_sine(450.0, 9);
+        assert!(pass > 10.0 * off);
     }
 }
