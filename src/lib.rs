@@ -62,6 +62,7 @@ impl Default for ColourizerRs {
 
 impl Default for ColourizerRsParams {
     fn default() -> Self {
+        const MIYAKO_BUSHI: [f32; 12] = [1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0];
         Self {
             // This gain is stored as linear gain. NIH-plug comes with useful conversion functions
             // to treat these kinds of parameters as if we were dealing with decibels. Storing this
@@ -86,18 +87,18 @@ impl Default for ColourizerRsParams {
             // `.with_step_size(0.1)` function to get internal rounding.
             .with_value_to_string(formatters::v2s_f32_gain_to_db(2))
             .with_string_to_value(formatters::s2v_f32_gain_to_db()),
-            c: FloatParam::new("C", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
-            c_sharp: FloatParam::new("C#", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
-            d: FloatParam::new("D", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
-            d_sharp: FloatParam::new("D#", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
-            e: FloatParam::new("E", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
-            f: FloatParam::new("F", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
-            f_sharp: FloatParam::new("F#", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
-            g: FloatParam::new("G", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
-            g_sharp: FloatParam::new("G#", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
-            a: FloatParam::new("A", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
-            a_sharp: FloatParam::new("A#", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
-            b: FloatParam::new("B", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
+            c: FloatParam::new("C", MIYAKO_BUSHI[0], FloatRange::Linear { min: 0.0, max: 1.0 }),
+            c_sharp: FloatParam::new("C#", MIYAKO_BUSHI[1], FloatRange::Linear { min: 0.0, max: 1.0 }),
+            d: FloatParam::new("D", MIYAKO_BUSHI[2], FloatRange::Linear { min: 0.0, max: 1.0 }),
+            d_sharp: FloatParam::new("D#", MIYAKO_BUSHI[3], FloatRange::Linear { min: 0.0, max: 1.0 }),
+            e: FloatParam::new("E", MIYAKO_BUSHI[4], FloatRange::Linear { min: 0.0, max: 1.0 }),
+            f: FloatParam::new("F", MIYAKO_BUSHI[5], FloatRange::Linear { min: 0.0, max: 1.0 }),
+            f_sharp: FloatParam::new("F#", MIYAKO_BUSHI[6], FloatRange::Linear { min: 0.0, max: 1.0 }),
+            g: FloatParam::new("G", MIYAKO_BUSHI[7], FloatRange::Linear { min: 0.0, max: 1.0 }),
+            g_sharp: FloatParam::new("G#", MIYAKO_BUSHI[8], FloatRange::Linear { min: 0.0, max: 1.0 }),
+            a: FloatParam::new("A", MIYAKO_BUSHI[9], FloatRange::Linear { min: 0.0, max: 1.0 }),
+            a_sharp: FloatParam::new("A#", MIYAKO_BUSHI[10], FloatRange::Linear { min: 0.0, max: 1.0 }),
+            b: FloatParam::new("B", MIYAKO_BUSHI[11], FloatRange::Linear { min: 0.0, max: 1.0 }),
         }
     }
 }
