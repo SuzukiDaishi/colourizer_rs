@@ -1,7 +1,5 @@
 // Filter bank for pitchmap-like effect
 
-use std::collections::HashSet;
-
 /// Simple peaking biquad filter.
 /// Coefficients are calculated for unity gain or attenuation.
 #[derive(Clone, Copy)]
@@ -71,20 +69,14 @@ fn note_index(name: &str) -> Option<u8> {
 /// Filter bank with a peak filter for each note from C0 to B8.
 pub struct FilterBank {
     filters: Vec<(u8, PeakFilter)>,
-    active: HashSet<u8>,
+    gains: [f32; 12],
 }
 
 impl FilterBank {
     /// Create a new filter bank. The provided scale lists the note names that
     /// should be audible.
-    pub fn new(sample_rate: f32, scale: &[&str]) -> Self {
+    pub fn new(sample_rate: f32) -> Self {
         let mut filters = Vec::new();
-        let mut active = HashSet::new();
-        for name in scale {
-            if let Some(idx) = note_index(name) {
-                active.insert(idx);
-            }
-        }
 
         // Piano range C0 (midi 12) .. B8 (midi 119)
         for midi in 12u8..=119u8 {
@@ -94,17 +86,15 @@ impl FilterBank {
             filters.push((idx, filter));
         }
 
-        Self { filters, active }
+        Self {
+            filters,
+            gains: [1.0; 12],
+        }
     }
 
-    /// Set the output scale using note names.
-    pub fn set_scale(&mut self, scale: &[&str]) {
-        self.active.clear();
-        for name in scale {
-            if let Some(idx) = note_index(name) {
-                self.active.insert(idx);
-            }
-        }
+    /// Update the per-note gains. Expects an array of 12 values for C..B.
+    pub fn set_gains(&mut self, gains: [f32; 12]) {
+        self.gains = gains;
     }
 
     /// Process a single sample through the filter bank.
@@ -112,9 +102,7 @@ impl FilterBank {
         let mut sum = 0.0;
         for (idx, filter) in &mut self.filters {
             let out = filter.process(input);
-            if self.active.contains(idx) {
-                sum += out;
-            }
+            sum += out * self.gains[*idx as usize];
         }
         sum
     }
@@ -149,71 +137,47 @@ mod tests {
     }
 
     #[test]
-    fn test_filterbank_scale() {
-        let sr = 48000.0;
-        let mut fb = FilterBank::new(sr, &["c", "g"]);
-        assert!(fb.active.contains(&0));
-        assert!(fb.active.contains(&7));
-        assert!(!fb.active.contains(&1));
-
-        fb.set_scale(&["d", "e"]);
-        assert!(fb.active.contains(&2));
-        assert!(fb.active.contains(&4));
-        assert!(!fb.active.contains(&0));
+    fn test_filterbank_gains() {
+        let sr = 48_000.0;
+        let mut fb = FilterBank::new(sr);
+        let gains = [1.0, 0.5, 0.0, 0.5, 1.0, 0.5, 0.0, 0.5, 1.0, 0.5, 0.0, 0.5];
+        fb.set_gains(gains);
+        assert_eq!(fb.gains[0], 1.0);
+        assert_eq!(fb.gains[2], 0.0);
+        assert_eq!(fb.gains[11], 0.5);
     }
 
     #[test]
     fn test_filter_count() {
-        let fb = FilterBank::new(44100.0, &["c"]);
+        let fb = FilterBank::new(44100.0);
         assert_eq!(fb.filters.len(), 108);
     }
 
     #[test]
-    fn test_set_scale_duplicates() {
-        let mut fb = FilterBank::new(44100.0, &["c", "c", "d"]);
-        assert_eq!(fb.active.len(), 2);
-        fb.set_scale(&["e", "e"]);
-        assert_eq!(fb.active.len(), 1);
-        assert!(fb.active.contains(&4));
+    fn test_set_gains_updates() {
+        let mut fb = FilterBank::new(44100.0);
+        let mut gains = [1.0_f32; 12];
+        gains[0] = 0.2;
+        fb.set_gains(gains);
+        assert_eq!(fb.gains[0], 0.2);
     }
 
     #[test]
     fn test_process_sample_zero() {
-        let mut fb = FilterBank::new(44100.0, &["c"]);
+        let mut fb = FilterBank::new(44100.0);
         assert_eq!(fb.process_sample(0.0), 0.0);
     }
 
     #[test]
     fn test_process_sample_no_active() {
-        let mut fb = FilterBank::new(44100.0, &[]);
+        let mut fb = FilterBank::new(44100.0);
+        fb.set_gains([0.0; 12]);
         assert_eq!(fb.process_sample(1.0), 0.0);
     }
 
     #[test]
     fn test_process_sample_single_note_nonzero() {
-        let mut fb = FilterBank::new(44100.0, &["c"]);
-        assert!(fb.process_sample(1.0) != 0.0);
-    }
-
-    #[test]
-    fn test_set_scale_empty() {
-        let mut fb = FilterBank::new(44100.0, &["c"]);
-        fb.set_scale(&[]);
-        assert!(fb.active.is_empty());
-    }
-
-    #[test]
-    fn test_set_scale_invalid_names() {
-        let mut fb = FilterBank::new(44100.0, &["x"]);
-        assert!(fb.active.is_empty());
-    }
-
-    #[test]
-    fn test_process_sample_after_scale_change() {
-        let mut fb = FilterBank::new(44100.0, &["c"]);
-        fb.process_sample(1.0);
-        fb.set_scale(&["d"]);
+        let mut fb = FilterBank::new(44100.0);
         assert!(fb.process_sample(1.0) != 0.0);
     }
 }
-

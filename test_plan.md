@@ -1,25 +1,31 @@
 # Test Plan
 
 ## Rust unit tests (FilterBank)
-- note index recognizes sharps and flats
-- note index is case insensitive
-- invalid note names return None
-- filterbank initializes with active scale
-- filter count covers piano range
-- duplicate scale entries are ignored
-- `set_scale` replaces active notes
-- processing zero input yields zero output
-- no active notes produce silence
-- processing after scale change works
+Run with `cargo test --quiet`.
+
+- `note_index` resolves natural notes, sharps and flats
+- `note_index` handles upper and lower case names
+- invalid names return `None`
+- creating a new `FilterBank` yields 108 filters (C0..B8)
+- `set_gains` correctly updates the internal gain array
+- processing zero input returns zero output
+- zero gains result in silence
+- processing with default gains produces non-zero output
 
 ## VST plugin tests via Pedalboard
-- plugin loads successfully as VST3
-- processes stereo audio at 44.1kHz
-- processes stereo audio at 48kHz
-- processes stereo audio at 96kHz
-- handles multiple sine frequencies
-- output is bounded between -1.0 and 1.0
-- runtime measured for each case
-- results recorded to `test_results.md`
-- no crashes during processing
-- bundle is located at `target/bundled`
+Use `uv` to create a virtual environment and install `numpy` and
+`pedalboard`:
+
+```shell
+uv venv
+uv pip install -e .
+```
+Tests are executed with `uv run python tests/pedalboard_test.py`.
+
+- plugin loads successfully from `target/bundled/Colourizer Rs.vst3`
+- sample rates 44.1kHz, 48kHz and 96kHz
+- both mono (1ch) and stereo (2ch) inputs are processed
+- input gain parameter is swept between 0.5 and 1.0
+- four sine wave frequencies (220Hz, 440Hz, 880Hz, 1760Hz)
+- min/max levels and runtime for each run are logged
+- results are written to `tests/test_results.md` and `tests/test_results.json`
