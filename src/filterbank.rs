@@ -83,8 +83,11 @@ impl FilterBank {
         for midi in 12u8..=119u8 {
             let freq = 440.0_f32 * 2.0_f32.powf((midi as f32 - 69.0) / 12.0);
             let idx = midi % 12;
-            // Use a very sharp peak to approximate a band-pass filter.
-            let filter = PeakFilter::new(freq, 300.0, 40.0, sample_rate);
+            // Use a reasonably narrow peak to approximate a band-pass filter.
+            // The original version used Q=300 and 40 dB gain which produced
+            // very sharp peaks and extreme amplification. Here the Q and gain
+            // are reduced to keep the effect more controlled.
+            let filter = PeakFilter::new(freq, 100.0, 20.0, sample_rate);
             filters.push((idx, filter));
         }
 
