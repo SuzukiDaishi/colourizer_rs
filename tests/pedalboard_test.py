@@ -5,7 +5,11 @@ from pathlib import Path
 RESULTS_DIR = Path(__file__).parent
 
 import numpy as np
-from pedalboard import Pedalboard, load_plugin
+import pytest
+try:
+    from pedalboard import Pedalboard, load_plugin
+except Exception:  # pragma: no cover - optional dependency
+    pytest.skip("pedalboard not available", allow_module_level=True)
 
 PLUGIN_PATH = "target/bundled/Colourizer Rs.vst3"
 
