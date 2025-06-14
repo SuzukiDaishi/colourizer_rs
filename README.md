@@ -22,12 +22,12 @@ cargo test --all --no-fail-fast
 
 After bundling the plugin, you can verify its behaviour with [Pedalboard](https://github.com/spotify/pedalboard).
 Use [`uv`](https://github.com/astral-sh/uv) to create a virtual environment and
-install the dependencies listed in `requirements.txt`:
+install the dependencies declared in `pyproject.toml`:
 
 ```shell
 uv venv
-uv pip install -r requirements.txt
-uv run python pedalboard_test.py
+uv pip install -e .
+uv run python tests/pedalboard_test.py
 ```
 
-The script generates `test_results.md` and `test_results.json` with detailed information about multiple sample rates, mono/stereo inputs and gain settings. It also records the time required for each processing run so you can gauge performance.
+The script generates `tests/test_results.md` and `tests/test_results.json` with detailed information about multiple sample rates, mono/stereo inputs and gain settings. It also records the time required for each processing run so you can gauge performance.

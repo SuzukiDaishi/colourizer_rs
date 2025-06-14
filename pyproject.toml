@@ -1,0 +1,11 @@
+[project]
+name = "colourizer-tests"
+version = "0.1.0"
+requires-python = ">=3.8"
+dependencies = [
+    "numpy",
+    "pedalboard",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

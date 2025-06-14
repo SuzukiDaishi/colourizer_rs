@@ -2,6 +2,8 @@ import json
 import time
 from pathlib import Path
 
+RESULTS_DIR = Path(__file__).parent
+
 import numpy as np
 from pedalboard import Pedalboard, load_plugin
 
@@ -63,8 +65,10 @@ def main() -> None:
                 for freq in (220.0, 440.0, 880.0, 1760.0):
                     results.append(run_case(sr, ch, freq, gain))
 
-    Path("test_results.md").write_text("# Python pedalboard test results\n\n")
-    with open("test_results.md", "a") as f:
+    (RESULTS_DIR / "test_results.md").write_text(
+        "# Python pedalboard test results\n\n"
+    )
+    with open(RESULTS_DIR / "test_results.md", "a") as f:
         for r in results:
             f.write(
                 f"- sr={r['sample_rate']} ch={r['channels']} "
@@ -72,7 +76,7 @@ def main() -> None:
                 f"shape={r['shape']} min={r['min']:.3f} max={r['max']:.3f} "
                 f"elapsed={r['elapsed_sec']:.4f}s\n"
             )
-    with open("test_results.json", "w") as f:
+    with open(RESULTS_DIR / "test_results.json", "w") as f:
         json.dump(results, f, indent=2)
 
 

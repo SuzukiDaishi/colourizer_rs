@@ -18,10 +18,9 @@ Use `uv` to create a virtual environment and install `numpy` and
 
 ```shell
 uv venv
-uv pip install -r requirements.txt
+uv pip install -e .
 ```
-
-Tests are executed with `uv run python pedalboard_test.py`.
+Tests are executed with `uv run python tests/pedalboard_test.py`.
 
 - plugin loads successfully from `target/bundled/Colourizer Rs.vst3`
 - sample rates 44.1kHz, 48kHz and 96kHz
@@ -29,4 +28,4 @@ Tests are executed with `uv run python pedalboard_test.py`.
 - input gain parameter is swept between 0.5 and 1.0
 - four sine wave frequencies (220Hz, 440Hz, 880Hz, 1760Hz)
 - min/max levels and runtime for each run are logged
-- results are written to `test_results.md` and `test_results.json`
+- results are written to `tests/test_results.md` and `tests/test_results.json`
