@@ -1,0 +1,626 @@
+[
+  {
+    "sample_rate": 44100,
+    "channels": 1,
+    "frequency": 220.0,
+    "gain": 0.5,
+    "shape": [
+      44100,
+      2
+    ],
+    "min": -107.99999237060547,
+    "max": 107.99999237060547,
+    "elapsed_sec": 0.02619348100000707
+  },
+  {
+    "sample_rate": 44100,
+    "channels": 1,
+    "frequency": 440.0,
+    "gain": 0.5,
+    "shape": [
+      44100,
+      2
+    ],
+    "min": -107.99999237060547,
+    "max": 107.99999237060547,
+    "elapsed_sec": 0.008906435999989526
+  },
+  {
+    "sample_rate": 44100,
+    "channels": 1,
+    "frequency": 880.0,
+    "gain": 0.5,
+    "shape": [
+      44100,
+      2
+    ],
+    "min": -107.99999237060547,
+    "max": 107.99999237060547,
+    "elapsed_sec": 0.008940644999995584
+  },
+  {
+    "sample_rate": 44100,
+    "channels": 1,
+    "frequency": 1760.0,
+    "gain": 0.5,
+    "shape": [
+      44100,
+      2
+    ],
+    "min": -107.99999237060547,
+    "max": 107.99999237060547,
+    "elapsed_sec": 0.009394232000005331
+  },
+  {
+    "sample_rate": 44100,
+    "channels": 1,
+    "frequency": 220.0,
+    "gain": 1.0,
+    "shape": [
+      44100,
+      2
+    ],
+    "min": -107.99999237060547,
+    "max": 107.99999237060547,
+    "elapsed_sec": 0.008389746999995396
+  },
+  {
+    "sample_rate": 44100,
+    "channels": 1,
+    "frequency": 440.0,
+    "gain": 1.0,
+    "shape": [
+      44100,
+      2
+    ],
+    "min": -107.99999237060547,
+    "max": 107.99999237060547,
+    "elapsed_sec": 0.008310141999999132
+  },
+  {
+    "sample_rate": 44100,
+    "channels": 1,
+    "frequency": 880.0,
+    "gain": 1.0,
+    "shape": [
+      44100,
+      2
+    ],
+    "min": -107.99999237060547,
+    "max": 107.99999237060547,
+    "elapsed_sec": 0.008351854000011372
+  },
+  {
+    "sample_rate": 44100,
+    "channels": 1,
+    "frequency": 1760.0,
+    "gain": 1.0,
+    "shape": [
+      44100,
+      2
+    ],
+    "min": -107.99999237060547,
+    "max": 107.99999237060547,
+    "elapsed_sec": 0.008444306000001234
+  },
+  {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frequency": 220.0,
+    "gain": 0.5,
+    "shape": [
+      44100,
+      2
+    ],
+    "min": -107.99999237060547,
+    "max": 107.99999237060547,
+    "elapsed_sec": 0.008310743999999204
+  },
+  {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frequency": 440.0,
+    "gain": 0.5,
+    "shape": [
+      44100,
+      2
+    ],
+    "min": -107.99999237060547,
+    "max": 107.99999237060547,
+    "elapsed_sec": 0.008428733000016564
+  },
+  {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frequency": 880.0,
+    "gain": 0.5,
+    "shape": [
+      44100,
+      2
+    ],
+    "min": -107.99999237060547,
+    "max": 107.99999237060547,
+    "elapsed_sec": 0.008282612000016343
+  },
+  {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frequency": 1760.0,
+    "gain": 0.5,
+    "shape": [
+      44100,
+      2
+    ],
+    "min": -107.99999237060547,
+    "max": 107.99999237060547,
+    "elapsed_sec": 0.008314777999999023
+  },
+  {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frequency": 220.0,
+    "gain": 1.0,
+    "shape": [
+      44100,
+      2
+    ],
+    "min": -107.99999237060547,
+    "max": 107.99999237060547,
+    "elapsed_sec": 0.018456740000004856
+  },
+  {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frequency": 440.0,
+    "gain": 1.0,
+    "shape": [
+      44100,
+      2
+    ],
+    "min": -107.99999237060547,
+    "max": 107.99999237060547,
+    "elapsed_sec": 0.009355415999976913
+  },
+  {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frequency": 880.0,
+    "gain": 1.0,
+    "shape": [
+      44100,
+      2
+    ],
+    "min": -107.99999237060547,
+    "max": 107.99999237060547,
+    "elapsed_sec": 0.008831255999979248
+  },
+  {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frequency": 1760.0,
+    "gain": 1.0,
+    "shape": [
+      44100,
+      2
+    ],
+    "min": -107.99999237060547,
+    "max": 107.99999237060547,
+    "elapsed_sec": 0.009062333999992234
+  },
+  {
+    "sample_rate": 48000,
+    "channels": 1,
+    "frequency": 220.0,
+    "gain": 0.5,
+    "shape": [
+      48000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.009200139999990142
+  },
+  {
+    "sample_rate": 48000,
+    "channels": 1,
+    "frequency": 440.0,
+    "gain": 0.5,
+    "shape": [
+      48000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.009259044000003769
+  },
+  {
+    "sample_rate": 48000,
+    "channels": 1,
+    "frequency": 880.0,
+    "gain": 0.5,
+    "shape": [
+      48000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.009330470999998397
+  },
+  {
+    "sample_rate": 48000,
+    "channels": 1,
+    "frequency": 1760.0,
+    "gain": 0.5,
+    "shape": [
+      48000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.009089068999998062
+  },
+  {
+    "sample_rate": 48000,
+    "channels": 1,
+    "frequency": 220.0,
+    "gain": 1.0,
+    "shape": [
+      48000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.009111479000011968
+  },
+  {
+    "sample_rate": 48000,
+    "channels": 1,
+    "frequency": 440.0,
+    "gain": 1.0,
+    "shape": [
+      48000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.009426887000017814
+  },
+  {
+    "sample_rate": 48000,
+    "channels": 1,
+    "frequency": 880.0,
+    "gain": 1.0,
+    "shape": [
+      48000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.010366812999990316
+  },
+  {
+    "sample_rate": 48000,
+    "channels": 1,
+    "frequency": 1760.0,
+    "gain": 1.0,
+    "shape": [
+      48000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.00929097100001286
+  },
+  {
+    "sample_rate": 48000,
+    "channels": 2,
+    "frequency": 220.0,
+    "gain": 0.5,
+    "shape": [
+      48000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.009192933999997877
+  },
+  {
+    "sample_rate": 48000,
+    "channels": 2,
+    "frequency": 440.0,
+    "gain": 0.5,
+    "shape": [
+      48000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.009001509000000851
+  },
+  {
+    "sample_rate": 48000,
+    "channels": 2,
+    "frequency": 880.0,
+    "gain": 0.5,
+    "shape": [
+      48000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.00900931900000046
+  },
+  {
+    "sample_rate": 48000,
+    "channels": 2,
+    "frequency": 1760.0,
+    "gain": 0.5,
+    "shape": [
+      48000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.009016860999992105
+  },
+  {
+    "sample_rate": 48000,
+    "channels": 2,
+    "frequency": 220.0,
+    "gain": 1.0,
+    "shape": [
+      48000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.008973795000002838
+  },
+  {
+    "sample_rate": 48000,
+    "channels": 2,
+    "frequency": 440.0,
+    "gain": 1.0,
+    "shape": [
+      48000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.009029144999999517
+  },
+  {
+    "sample_rate": 48000,
+    "channels": 2,
+    "frequency": 880.0,
+    "gain": 1.0,
+    "shape": [
+      48000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.009749923000015315
+  },
+  {
+    "sample_rate": 48000,
+    "channels": 2,
+    "frequency": 1760.0,
+    "gain": 1.0,
+    "shape": [
+      48000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.00910717799999361
+  },
+  {
+    "sample_rate": 96000,
+    "channels": 1,
+    "frequency": 220.0,
+    "gain": 0.5,
+    "shape": [
+      96000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.018842374000001882
+  },
+  {
+    "sample_rate": 96000,
+    "channels": 1,
+    "frequency": 440.0,
+    "gain": 0.5,
+    "shape": [
+      96000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.017745514000012008
+  },
+  {
+    "sample_rate": 96000,
+    "channels": 1,
+    "frequency": 880.0,
+    "gain": 0.5,
+    "shape": [
+      96000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.018467576000006147
+  },
+  {
+    "sample_rate": 96000,
+    "channels": 1,
+    "frequency": 1760.0,
+    "gain": 0.5,
+    "shape": [
+      96000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.01731602600000315
+  },
+  {
+    "sample_rate": 96000,
+    "channels": 1,
+    "frequency": 220.0,
+    "gain": 1.0,
+    "shape": [
+      96000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.01746892599999228
+  },
+  {
+    "sample_rate": 96000,
+    "channels": 1,
+    "frequency": 440.0,
+    "gain": 1.0,
+    "shape": [
+      96000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.017305571000008513
+  },
+  {
+    "sample_rate": 96000,
+    "channels": 1,
+    "frequency": 880.0,
+    "gain": 1.0,
+    "shape": [
+      96000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.017997451000013598
+  },
+  {
+    "sample_rate": 96000,
+    "channels": 1,
+    "frequency": 1760.0,
+    "gain": 1.0,
+    "shape": [
+      96000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.017380629999991015
+  },
+  {
+    "sample_rate": 96000,
+    "channels": 2,
+    "frequency": 220.0,
+    "gain": 0.5,
+    "shape": [
+      96000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.01731807000001595
+  },
+  {
+    "sample_rate": 96000,
+    "channels": 2,
+    "frequency": 440.0,
+    "gain": 0.5,
+    "shape": [
+      96000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.017306700999995428
+  },
+  {
+    "sample_rate": 96000,
+    "channels": 2,
+    "frequency": 880.0,
+    "gain": 0.5,
+    "shape": [
+      96000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.018034792999998217
+  },
+  {
+    "sample_rate": 96000,
+    "channels": 2,
+    "frequency": 1760.0,
+    "gain": 0.5,
+    "shape": [
+      96000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.01803516999999033
+  },
+  {
+    "sample_rate": 96000,
+    "channels": 2,
+    "frequency": 220.0,
+    "gain": 1.0,
+    "shape": [
+      96000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.01872253700000215
+  },
+  {
+    "sample_rate": 96000,
+    "channels": 2,
+    "frequency": 440.0,
+    "gain": 1.0,
+    "shape": [
+      96000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.018598003000022345
+  },
+  {
+    "sample_rate": 96000,
+    "channels": 2,
+    "frequency": 880.0,
+    "gain": 1.0,
+    "shape": [
+      96000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.01806866500001547
+  },
+  {
+    "sample_rate": 96000,
+    "channels": 2,
+    "frequency": 1760.0,
+    "gain": 1.0,
+    "shape": [
+      96000,
+      2
+    ],
+    "min": -108.0,
+    "max": 108.0,
+    "elapsed_sec": 0.01790087999998491
+  }
+]

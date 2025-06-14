@@ -9,12 +9,9 @@ pub mod filterbank;
 // https://github.com/robbert-vdh/nih-plug/blob/master/plugins/examples/gain/src/lib.rs to get
 // started
 
-const DEFAULT_SCALE: [&str; 7] = ["c", "d", "e", "f", "g", "a", "b"];
-
 struct ColourizerRs {
     params: Arc<ColourizerRsParams>,
-    filterbank_l: FilterBank,
-    filterbank_r: FilterBank,
+    filterbank: FilterBank,
     sample_rate: f32,
 }
 
@@ -26,6 +23,30 @@ struct ColourizerRsParams {
     /// gain parameter is stored as linear gain while the values are displayed in decibels.
     #[id = "gain"]
     pub gain: FloatParam,
+    #[id = "c"]
+    pub c: FloatParam,
+    #[id = "c_sharp"]
+    pub c_sharp: FloatParam,
+    #[id = "d"]
+    pub d: FloatParam,
+    #[id = "d_sharp"]
+    pub d_sharp: FloatParam,
+    #[id = "e"]
+    pub e: FloatParam,
+    #[id = "f"]
+    pub f: FloatParam,
+    #[id = "f_sharp"]
+    pub f_sharp: FloatParam,
+    #[id = "g"]
+    pub g: FloatParam,
+    #[id = "g_sharp"]
+    pub g_sharp: FloatParam,
+    #[id = "a"]
+    pub a: FloatParam,
+    #[id = "a_sharp"]
+    pub a_sharp: FloatParam,
+    #[id = "b"]
+    pub b: FloatParam,
 }
 
 impl Default for ColourizerRs {
@@ -33,8 +54,7 @@ impl Default for ColourizerRs {
         let sample_rate = 44_100.0;
         Self {
             params: Arc::new(ColourizerRsParams::default()),
-            filterbank_l: FilterBank::new(sample_rate, &DEFAULT_SCALE),
-            filterbank_r: FilterBank::new(sample_rate, &DEFAULT_SCALE),
+            filterbank: FilterBank::new(sample_rate),
             sample_rate,
         }
     }
@@ -66,6 +86,18 @@ impl Default for ColourizerRsParams {
             // `.with_step_size(0.1)` function to get internal rounding.
             .with_value_to_string(formatters::v2s_f32_gain_to_db(2))
             .with_string_to_value(formatters::s2v_f32_gain_to_db()),
+            c: FloatParam::new("C", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
+            c_sharp: FloatParam::new("C#", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
+            d: FloatParam::new("D", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
+            d_sharp: FloatParam::new("D#", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
+            e: FloatParam::new("E", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
+            f: FloatParam::new("F", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
+            f_sharp: FloatParam::new("F#", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
+            g: FloatParam::new("G", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
+            g_sharp: FloatParam::new("G#", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
+            a: FloatParam::new("A", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
+            a_sharp: FloatParam::new("A#", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
+            b: FloatParam::new("B", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
         }
     }
 }
@@ -93,7 +125,6 @@ impl Plugin for ColourizerRs {
         names: PortNames::const_default(),
     }];
 
-
     const MIDI_INPUT: MidiConfig = MidiConfig::None;
     const MIDI_OUTPUT: MidiConfig = MidiConfig::None;
 
@@ -119,14 +150,12 @@ impl Plugin for ColourizerRs {
         _context: &mut impl InitContext<Self>,
     ) -> bool {
         self.sample_rate = buffer_config.sample_rate;
-        self.filterbank_l = FilterBank::new(self.sample_rate, &DEFAULT_SCALE);
-        self.filterbank_r = FilterBank::new(self.sample_rate, &DEFAULT_SCALE);
+        self.filterbank = FilterBank::new(self.sample_rate);
         true
     }
 
     fn reset(&mut self) {
-        self.filterbank_l = FilterBank::new(self.sample_rate, &DEFAULT_SCALE);
-        self.filterbank_r = FilterBank::new(self.sample_rate, &DEFAULT_SCALE);
+        self.filterbank = FilterBank::new(self.sample_rate);
     }
 
     fn process(
@@ -135,16 +164,35 @@ impl Plugin for ColourizerRs {
         _aux: &mut AuxiliaryBuffers,
         _context: &mut impl ProcessContext<Self>,
     ) -> ProcessStatus {
+        let note_gains = [
+            self.params.c.value(),
+            self.params.c_sharp.value(),
+            self.params.d.value(),
+            self.params.d_sharp.value(),
+            self.params.e.value(),
+            self.params.f.value(),
+            self.params.f_sharp.value(),
+            self.params.g.value(),
+            self.params.g_sharp.value(),
+            self.params.a.value(),
+            self.params.a_sharp.value(),
+            self.params.b.value(),
+        ];
+        self.filterbank.set_gains(note_gains);
+
         for mut samples in buffer.iter_samples() {
             let gain = self.params.gain.smoothed.next();
 
-            for (chan_idx, sample) in samples.iter_mut().enumerate() {
-                let processed = match chan_idx {
-                    0 => self.filterbank_l.process_sample(*sample),
-                    1 => self.filterbank_r.process_sample(*sample),
-                    _ => *sample,
-                };
-                *sample = processed * gain;
+            let mut sum = 0.0;
+            for sample in samples.iter_mut() {
+                sum += *sample;
+            }
+            let input_sum = sum / samples.len() as f32;
+
+            let processed = self.filterbank.process_sample(input_sum) * gain;
+
+            for sample in samples.iter_mut() {
+                *sample = processed;
             }
         }
 
