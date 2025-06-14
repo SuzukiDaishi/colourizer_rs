@@ -187,4 +187,12 @@ mod tests {
         let out = fb.process_sample(1.0);
         assert!(out.abs() <= 1.0);
     }
+
+    #[test]
+    fn test_process_sample_amplitude_unity() {
+        let mut fb = FilterBank::new(44100.0);
+        fb.set_gains([1.0; 12]);
+        let out = fb.process_sample(1.0);
+        assert!((out - 1.0).abs() <= 0.0001);
+    }
 }
