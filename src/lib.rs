@@ -1,4 +1,6 @@
 use nih_plug::prelude::*;
+use rayon::prelude::*;
+use rayon::ThreadPoolBuilder;
 use std::sync::Arc;
 
 use crate::filterbank::FilterBank;
@@ -12,7 +14,16 @@ pub mod filterbank;
 struct ColourizerRs {
     params: Arc<ColourizerRsParams>,
     filterbank: FilterBank,
+    filterbanks: Vec<FilterBank>,
     sample_rate: f32,
+}
+
+#[derive(Enum, Clone, Copy, Debug, PartialEq, Eq)]
+enum ProcessingMode {
+    #[id = "mono"]
+    Mono,
+    #[id = "multi"]
+    Multi,
 }
 
 #[derive(Params)]
@@ -47,6 +58,9 @@ struct ColourizerRsParams {
     pub a_sharp: FloatParam,
     #[id = "b"]
     pub b: FloatParam,
+    /// Processing mode: mono or multi-channel
+    #[id = "mode"]
+    pub mode: EnumParam<ProcessingMode>,
 }
 
 impl Default for ColourizerRs {
@@ -55,6 +69,7 @@ impl Default for ColourizerRs {
         Self {
             params: Arc::new(ColourizerRsParams::default()),
             filterbank: FilterBank::new(sample_rate),
+            filterbanks: Vec::new(),
             sample_rate,
         }
     }
@@ -62,7 +77,8 @@ impl Default for ColourizerRs {
 
 impl Default for ColourizerRsParams {
     fn default() -> Self {
-        const MIYAKO_BUSHI: [f32; 12] = [1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0];
+        const MIYAKO_BUSHI: [f32; 12] =
+            [1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0];
         Self {
             // This gain is stored as linear gain. NIH-plug comes with useful conversion functions
             // to treat these kinds of parameters as if we were dealing with decibels. Storing this
@@ -87,18 +103,67 @@ impl Default for ColourizerRsParams {
             // `.with_step_size(0.1)` function to get internal rounding.
             .with_value_to_string(formatters::v2s_f32_gain_to_db(2))
             .with_string_to_value(formatters::s2v_f32_gain_to_db()),
-            c: FloatParam::new("C", MIYAKO_BUSHI[0], FloatRange::Linear { min: 0.0, max: 1.0 }),
-            c_sharp: FloatParam::new("C#", MIYAKO_BUSHI[1], FloatRange::Linear { min: 0.0, max: 1.0 }),
-            d: FloatParam::new("D", MIYAKO_BUSHI[2], FloatRange::Linear { min: 0.0, max: 1.0 }),
-            d_sharp: FloatParam::new("D#", MIYAKO_BUSHI[3], FloatRange::Linear { min: 0.0, max: 1.0 }),
-            e: FloatParam::new("E", MIYAKO_BUSHI[4], FloatRange::Linear { min: 0.0, max: 1.0 }),
-            f: FloatParam::new("F", MIYAKO_BUSHI[5], FloatRange::Linear { min: 0.0, max: 1.0 }),
-            f_sharp: FloatParam::new("F#", MIYAKO_BUSHI[6], FloatRange::Linear { min: 0.0, max: 1.0 }),
-            g: FloatParam::new("G", MIYAKO_BUSHI[7], FloatRange::Linear { min: 0.0, max: 1.0 }),
-            g_sharp: FloatParam::new("G#", MIYAKO_BUSHI[8], FloatRange::Linear { min: 0.0, max: 1.0 }),
-            a: FloatParam::new("A", MIYAKO_BUSHI[9], FloatRange::Linear { min: 0.0, max: 1.0 }),
-            a_sharp: FloatParam::new("A#", MIYAKO_BUSHI[10], FloatRange::Linear { min: 0.0, max: 1.0 }),
-            b: FloatParam::new("B", MIYAKO_BUSHI[11], FloatRange::Linear { min: 0.0, max: 1.0 }),
+            c: FloatParam::new(
+                "C",
+                MIYAKO_BUSHI[0],
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            ),
+            c_sharp: FloatParam::new(
+                "C#",
+                MIYAKO_BUSHI[1],
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            ),
+            d: FloatParam::new(
+                "D",
+                MIYAKO_BUSHI[2],
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            ),
+            d_sharp: FloatParam::new(
+                "D#",
+                MIYAKO_BUSHI[3],
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            ),
+            e: FloatParam::new(
+                "E",
+                MIYAKO_BUSHI[4],
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            ),
+            f: FloatParam::new(
+                "F",
+                MIYAKO_BUSHI[5],
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            ),
+            f_sharp: FloatParam::new(
+                "F#",
+                MIYAKO_BUSHI[6],
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            ),
+            g: FloatParam::new(
+                "G",
+                MIYAKO_BUSHI[7],
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            ),
+            g_sharp: FloatParam::new(
+                "G#",
+                MIYAKO_BUSHI[8],
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            ),
+            a: FloatParam::new(
+                "A",
+                MIYAKO_BUSHI[9],
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            ),
+            a_sharp: FloatParam::new(
+                "A#",
+                MIYAKO_BUSHI[10],
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            ),
+            b: FloatParam::new(
+                "B",
+                MIYAKO_BUSHI[11],
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            ),
+            mode: EnumParam::new("Processing Mode", ProcessingMode::Mono),
         }
     }
 }
@@ -113,18 +178,37 @@ impl Plugin for ColourizerRs {
 
     // The first audio IO layout is used as the default. The other layouts may be selected either
     // explicitly or automatically by the host or the user depending on the plugin API/backend.
-    const AUDIO_IO_LAYOUTS: &'static [AudioIOLayout] = &[AudioIOLayout {
-        main_input_channels: NonZeroU32::new(2),
-        main_output_channels: NonZeroU32::new(2),
+    const AUDIO_IO_LAYOUTS: &'static [AudioIOLayout] = &[
+        AudioIOLayout {
+            main_input_channels: NonZeroU32::new(2),
+            main_output_channels: NonZeroU32::new(2),
 
-        aux_input_ports: &[],
-        aux_output_ports: &[],
+            aux_input_ports: &[],
+            aux_output_ports: &[],
 
-        // Individual ports and the layout as a whole can be named here. By default these names
-        // are generated as needed. This layout will be called 'Stereo', while a layout with
-        // only one input and output channel would be called 'Mono'.
-        names: PortNames::const_default(),
-    }];
+            names: PortNames::const_default(),
+        },
+        AudioIOLayout {
+            main_input_channels: NonZeroU32::new(6),
+            main_output_channels: NonZeroU32::new(6),
+            aux_input_ports: &[],
+            aux_output_ports: &[],
+            names: PortNames {
+                layout: Some("5.1"),
+                ..PortNames::const_default()
+            },
+        },
+        AudioIOLayout {
+            main_input_channels: NonZeroU32::new(1),
+            main_output_channels: NonZeroU32::new(1),
+            aux_input_ports: &[],
+            aux_output_ports: &[],
+            names: PortNames {
+                layout: Some("Mono"),
+                ..PortNames::const_default()
+            },
+        },
+    ];
 
     const MIDI_INPUT: MidiConfig = MidiConfig::None;
     const MIDI_OUTPUT: MidiConfig = MidiConfig::None;
@@ -146,17 +230,27 @@ impl Plugin for ColourizerRs {
 
     fn initialize(
         &mut self,
-        _audio_io_layout: &AudioIOLayout,
+        audio_io_layout: &AudioIOLayout,
         buffer_config: &BufferConfig,
         _context: &mut impl InitContext<Self>,
     ) -> bool {
         self.sample_rate = buffer_config.sample_rate;
         self.filterbank = FilterBank::new(self.sample_rate);
+        self.filterbanks = (0..audio_io_layout
+            .main_output_channels
+            .map(NonZeroU32::get)
+            .unwrap_or(0) as usize)
+            .map(|_| FilterBank::new(self.sample_rate))
+            .collect();
+        let _ = ThreadPoolBuilder::new().build_global();
         true
     }
 
     fn reset(&mut self) {
         self.filterbank = FilterBank::new(self.sample_rate);
+        for fb in &mut self.filterbanks {
+            *fb = FilterBank::new(self.sample_rate);
+        }
     }
 
     fn process(
@@ -179,21 +273,41 @@ impl Plugin for ColourizerRs {
             self.params.a_sharp.value(),
             self.params.b.value(),
         ];
-        self.filterbank.set_gains(note_gains);
-
-        for mut samples in buffer.iter_samples() {
-            let gain = self.params.gain.smoothed.next();
-
-            let mut sum = 0.0;
-            for sample in samples.iter_mut() {
-                sum += *sample;
+        match self.params.mode.value() {
+            ProcessingMode::Mono => {
+                self.filterbank.set_gains(note_gains);
+                for mut samples in buffer.iter_samples() {
+                    let gain = self.params.gain.smoothed.next();
+                    let mut sum = 0.0;
+                    for sample in samples.iter_mut() {
+                        sum += *sample;
+                    }
+                    let input_sum = sum / samples.len() as f32;
+                    let processed = self.filterbank.process_sample(input_sum) * gain;
+                    for sample in samples.iter_mut() {
+                        *sample = processed;
+                    }
+                }
             }
-            let input_sum = sum / samples.len() as f32;
-
-            let processed = self.filterbank.process_sample(input_sum) * gain;
-
-            for sample in samples.iter_mut() {
-                *sample = processed;
+            ProcessingMode::Multi => {
+                let channels = buffer.as_slice();
+                if self.filterbanks.len() != channels.len() {
+                    self.filterbanks = (0..channels.len())
+                        .map(|_| FilterBank::new(self.sample_rate))
+                        .collect();
+                }
+                for fb in &mut self.filterbanks {
+                    fb.set_gains(note_gains);
+                }
+                let gain = self.params.gain.smoothed.next();
+                channels
+                    .par_iter_mut()
+                    .zip(self.filterbanks.par_iter_mut())
+                    .for_each(|(ch, fb)| {
+                        for sample in ch.iter_mut() {
+                            *sample = fb.process_sample(*sample) * gain;
+                        }
+                    });
             }
         }
 
@@ -208,15 +322,22 @@ impl ClapPlugin for ColourizerRs {
     const CLAP_SUPPORT_URL: Option<&'static str> = None;
 
     // Don't forget to change these features
-    const CLAP_FEATURES: &'static [ClapFeature] = &[ClapFeature::AudioEffect, ClapFeature::Stereo];
+    const CLAP_FEATURES: &'static [ClapFeature] = &[
+        ClapFeature::AudioEffect,
+        ClapFeature::Stereo,
+        ClapFeature::Surround,
+    ];
 }
 
 impl Vst3Plugin for ColourizerRs {
     const VST3_CLASS_ID: [u8; 16] = *b"ColourizerEffect";
 
     // And also don't forget to change these categories
-    const VST3_SUBCATEGORIES: &'static [Vst3SubCategory] =
-        &[Vst3SubCategory::Fx, Vst3SubCategory::Dynamics];
+    const VST3_SUBCATEGORIES: &'static [Vst3SubCategory] = &[
+        Vst3SubCategory::Fx,
+        Vst3SubCategory::Dynamics,
+        Vst3SubCategory::Surround,
+    ];
 }
 
 nih_export_clap!(ColourizerRs);
