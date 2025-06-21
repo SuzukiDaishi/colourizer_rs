@@ -30,9 +30,10 @@ def _set_parameter(plugin, name: str, value: float) -> None:
                 break
 
 
-def run_case(sample_rate: int, channels: int, freq: float, gain: float) -> dict:
+def run_case(sample_rate: int, channels: int, freq: float, gain: float, mode: str) -> dict:
     plugin = load_plugin(PLUGIN_PATH)
     _set_parameter(plugin, "Gain", gain)
+    _set_parameter(plugin, "Processing Mode", mode)
     board = Pedalboard([plugin])
 
     n = sample_rate
@@ -40,13 +41,11 @@ def run_case(sample_rate: int, channels: int, freq: float, gain: float) -> dict:
     sine = np.sin(2 * np.pi * freq * t).astype(np.float32)
     if channels == 1:
         audio = sine[:, None]
-        stereo_audio = np.repeat(audio, 2, axis=1)
     else:
         audio = np.stack([sine] * channels, axis=1)
-        stereo_audio = audio
 
     start = time.perf_counter()
-    processed = board(stereo_audio, sample_rate)
+    processed = board(audio, sample_rate)
     elapsed = time.perf_counter() - start
 
     return {
@@ -58,16 +57,18 @@ def run_case(sample_rate: int, channels: int, freq: float, gain: float) -> dict:
         "min": float(processed.min()),
         "max": float(processed.max()),
         "elapsed_sec": elapsed,
+        "mode": mode,
     }
 
 
 def main() -> None:
     results = []
-    for sr in (44100, 48000, 96000):
-        for ch in (1, 2):
-            for gain in (0.5, 1.0):
-                for freq in (220.0, 440.0, 880.0, 1760.0):
-                    results.append(run_case(sr, ch, freq, gain))
+    for sr in (44100, 48000):
+        for ch in (1, 2, 6):
+            for mode in ("Mono", "Multi"):
+                for gain in (0.5, 1.0):
+                    for freq in (220.0, 440.0, 880.0, 1760.0):
+                        results.append(run_case(sr, ch, freq, gain, mode))
 
     (RESULTS_DIR / "test_results.md").write_text(
         "# Python pedalboard test results\n\n"
@@ -75,7 +76,7 @@ def main() -> None:
     with open(RESULTS_DIR / "test_results.md", "a") as f:
         for r in results:
             f.write(
-                f"- sr={r['sample_rate']} ch={r['channels']} "
+                f"- sr={r['sample_rate']} ch={r['channels']} mode={r['mode']} "
                 f"gain={r['gain']} f={r['frequency']} "
                 f"shape={r['shape']} min={r['min']:.3f} max={r['max']:.3f} "
                 f"elapsed={r['elapsed_sec']:.4f}s\n"

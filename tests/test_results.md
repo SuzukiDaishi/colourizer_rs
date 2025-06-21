@@ -1,50 +1,98 @@
 # Python pedalboard test results
 
-- sr=44100 ch=1 gain=0.5 f=220.0 shape=[44100, 2] min=-108.000 max=108.000 elapsed=0.0118s
-- sr=44100 ch=1 gain=0.5 f=440.0 shape=[44100, 2] min=-108.000 max=108.000 elapsed=0.0115s
-- sr=44100 ch=1 gain=0.5 f=880.0 shape=[44100, 2] min=-108.000 max=108.000 elapsed=0.0113s
-- sr=44100 ch=1 gain=0.5 f=1760.0 shape=[44100, 2] min=-108.000 max=108.000 elapsed=0.0113s
-- sr=44100 ch=1 gain=1.0 f=220.0 shape=[44100, 2] min=-108.000 max=108.000 elapsed=0.0115s
-- sr=44100 ch=1 gain=1.0 f=440.0 shape=[44100, 2] min=-108.000 max=108.000 elapsed=0.0116s
-- sr=44100 ch=1 gain=1.0 f=880.0 shape=[44100, 2] min=-108.000 max=108.000 elapsed=0.0118s
-- sr=44100 ch=1 gain=1.0 f=1760.0 shape=[44100, 2] min=-108.000 max=108.000 elapsed=0.0116s
-- sr=44100 ch=2 gain=0.5 f=220.0 shape=[44100, 2] min=-108.000 max=108.000 elapsed=0.0119s
-- sr=44100 ch=2 gain=0.5 f=440.0 shape=[44100, 2] min=-108.000 max=108.000 elapsed=0.0116s
-- sr=44100 ch=2 gain=0.5 f=880.0 shape=[44100, 2] min=-108.000 max=108.000 elapsed=0.0231s
-- sr=44100 ch=2 gain=0.5 f=1760.0 shape=[44100, 2] min=-108.000 max=108.000 elapsed=0.0125s
-- sr=44100 ch=2 gain=1.0 f=220.0 shape=[44100, 2] min=-108.000 max=108.000 elapsed=0.0117s
-- sr=44100 ch=2 gain=1.0 f=440.0 shape=[44100, 2] min=-108.000 max=108.000 elapsed=0.0117s
-- sr=44100 ch=2 gain=1.0 f=880.0 shape=[44100, 2] min=-108.000 max=108.000 elapsed=0.0125s
-- sr=44100 ch=2 gain=1.0 f=1760.0 shape=[44100, 2] min=-108.000 max=108.000 elapsed=0.0119s
-- sr=48000 ch=1 gain=0.5 f=220.0 shape=[48000, 2] min=-108.000 max=108.000 elapsed=0.0124s
-- sr=48000 ch=1 gain=0.5 f=440.0 shape=[48000, 2] min=-108.000 max=108.000 elapsed=0.0268s
-- sr=48000 ch=1 gain=0.5 f=880.0 shape=[48000, 2] min=-108.000 max=108.000 elapsed=0.0131s
-- sr=48000 ch=1 gain=0.5 f=1760.0 shape=[48000, 2] min=-108.000 max=108.000 elapsed=0.0127s
-- sr=48000 ch=1 gain=1.0 f=220.0 shape=[48000, 2] min=-108.000 max=108.000 elapsed=0.0126s
-- sr=48000 ch=1 gain=1.0 f=440.0 shape=[48000, 2] min=-108.000 max=108.000 elapsed=0.0126s
-- sr=48000 ch=1 gain=1.0 f=880.0 shape=[48000, 2] min=-108.000 max=108.000 elapsed=0.0127s
-- sr=48000 ch=1 gain=1.0 f=1760.0 shape=[48000, 2] min=-108.000 max=108.000 elapsed=0.0135s
-- sr=48000 ch=2 gain=0.5 f=220.0 shape=[48000, 2] min=-108.000 max=108.000 elapsed=0.0257s
-- sr=48000 ch=2 gain=0.5 f=440.0 shape=[48000, 2] min=-108.000 max=108.000 elapsed=0.0133s
-- sr=48000 ch=2 gain=0.5 f=880.0 shape=[48000, 2] min=-108.000 max=108.000 elapsed=0.0126s
-- sr=48000 ch=2 gain=0.5 f=1760.0 shape=[48000, 2] min=-108.000 max=108.000 elapsed=0.0125s
-- sr=48000 ch=2 gain=1.0 f=220.0 shape=[48000, 2] min=-108.000 max=108.000 elapsed=0.0127s
-- sr=48000 ch=2 gain=1.0 f=440.0 shape=[48000, 2] min=-108.000 max=108.000 elapsed=0.0138s
-- sr=48000 ch=2 gain=1.0 f=880.0 shape=[48000, 2] min=-108.000 max=108.000 elapsed=0.0148s
-- sr=48000 ch=2 gain=1.0 f=1760.0 shape=[48000, 2] min=-108.000 max=108.000 elapsed=0.0125s
-- sr=96000 ch=1 gain=0.5 f=220.0 shape=[96000, 2] min=-108.000 max=108.000 elapsed=0.0258s
-- sr=96000 ch=1 gain=0.5 f=440.0 shape=[96000, 2] min=-108.000 max=108.000 elapsed=0.0243s
-- sr=96000 ch=1 gain=0.5 f=880.0 shape=[96000, 2] min=-108.000 max=108.000 elapsed=0.0248s
-- sr=96000 ch=1 gain=0.5 f=1760.0 shape=[96000, 2] min=-108.000 max=108.000 elapsed=0.0254s
-- sr=96000 ch=1 gain=1.0 f=220.0 shape=[96000, 2] min=-108.000 max=108.000 elapsed=0.0242s
-- sr=96000 ch=1 gain=1.0 f=440.0 shape=[96000, 2] min=-108.000 max=108.000 elapsed=0.0242s
-- sr=96000 ch=1 gain=1.0 f=880.0 shape=[96000, 2] min=-108.000 max=108.000 elapsed=0.0271s
-- sr=96000 ch=1 gain=1.0 f=1760.0 shape=[96000, 2] min=-108.000 max=108.000 elapsed=0.0244s
-- sr=96000 ch=2 gain=0.5 f=220.0 shape=[96000, 2] min=-108.000 max=108.000 elapsed=0.0242s
-- sr=96000 ch=2 gain=0.5 f=440.0 shape=[96000, 2] min=-108.000 max=108.000 elapsed=0.0265s
-- sr=96000 ch=2 gain=0.5 f=880.0 shape=[96000, 2] min=-108.000 max=108.000 elapsed=0.0251s
-- sr=96000 ch=2 gain=0.5 f=1760.0 shape=[96000, 2] min=-108.000 max=108.000 elapsed=0.0249s
-- sr=96000 ch=2 gain=1.0 f=220.0 shape=[96000, 2] min=-108.000 max=108.000 elapsed=0.0275s
-- sr=96000 ch=2 gain=1.0 f=440.0 shape=[96000, 2] min=-108.000 max=108.000 elapsed=0.0258s
-- sr=96000 ch=2 gain=1.0 f=880.0 shape=[96000, 2] min=-108.000 max=108.000 elapsed=0.0251s
-- sr=96000 ch=2 gain=1.0 f=1760.0 shape=[96000, 2] min=-108.000 max=108.000 elapsed=0.0248s
+- sr=44100 ch=1 mode=Mono gain=0.5 f=220.0 shape=[44100, 1] min=-0.576 max=0.602 elapsed=0.0096s
+- sr=44100 ch=1 mode=Mono gain=0.5 f=440.0 shape=[44100, 1] min=-0.580 max=0.611 elapsed=0.0094s
+- sr=44100 ch=1 mode=Mono gain=0.5 f=880.0 shape=[44100, 1] min=-0.597 max=0.625 elapsed=0.0088s
+- sr=44100 ch=1 mode=Mono gain=0.5 f=1760.0 shape=[44100, 1] min=-0.620 max=0.651 elapsed=0.0086s
+- sr=44100 ch=1 mode=Mono gain=1.0 f=220.0 shape=[44100, 1] min=-0.576 max=0.602 elapsed=0.0085s
+- sr=44100 ch=1 mode=Mono gain=1.0 f=440.0 shape=[44100, 1] min=-0.580 max=0.611 elapsed=0.0085s
+- sr=44100 ch=1 mode=Mono gain=1.0 f=880.0 shape=[44100, 1] min=-0.597 max=0.625 elapsed=0.0091s
+- sr=44100 ch=1 mode=Mono gain=1.0 f=1760.0 shape=[44100, 1] min=-0.620 max=0.651 elapsed=0.0086s
+- sr=44100 ch=1 mode=Multi gain=0.5 f=220.0 shape=[44100, 1] min=-0.576 max=0.602 elapsed=0.0085s
+- sr=44100 ch=1 mode=Multi gain=0.5 f=440.0 shape=[44100, 1] min=-0.580 max=0.611 elapsed=0.0086s
+- sr=44100 ch=1 mode=Multi gain=0.5 f=880.0 shape=[44100, 1] min=-0.597 max=0.625 elapsed=0.0086s
+- sr=44100 ch=1 mode=Multi gain=0.5 f=1760.0 shape=[44100, 1] min=-0.620 max=0.651 elapsed=0.0090s
+- sr=44100 ch=1 mode=Multi gain=1.0 f=220.0 shape=[44100, 1] min=-0.576 max=0.602 elapsed=0.0086s
+- sr=44100 ch=1 mode=Multi gain=1.0 f=440.0 shape=[44100, 1] min=-0.580 max=0.611 elapsed=0.0086s
+- sr=44100 ch=1 mode=Multi gain=1.0 f=880.0 shape=[44100, 1] min=-0.597 max=0.625 elapsed=0.0085s
+- sr=44100 ch=1 mode=Multi gain=1.0 f=1760.0 shape=[44100, 1] min=-0.620 max=0.651 elapsed=0.0086s
+- sr=44100 ch=2 mode=Mono gain=0.5 f=220.0 shape=[44100, 2] min=-0.576 max=0.602 elapsed=0.0089s
+- sr=44100 ch=2 mode=Mono gain=0.5 f=440.0 shape=[44100, 2] min=-0.580 max=0.611 elapsed=0.0089s
+- sr=44100 ch=2 mode=Mono gain=0.5 f=880.0 shape=[44100, 2] min=-0.597 max=0.625 elapsed=0.0090s
+- sr=44100 ch=2 mode=Mono gain=0.5 f=1760.0 shape=[44100, 2] min=-0.620 max=0.651 elapsed=0.0099s
+- sr=44100 ch=2 mode=Mono gain=1.0 f=220.0 shape=[44100, 2] min=-0.576 max=0.602 elapsed=0.0101s
+- sr=44100 ch=2 mode=Mono gain=1.0 f=440.0 shape=[44100, 2] min=-0.580 max=0.611 elapsed=0.0091s
+- sr=44100 ch=2 mode=Mono gain=1.0 f=880.0 shape=[44100, 2] min=-0.597 max=0.625 elapsed=0.0093s
+- sr=44100 ch=2 mode=Mono gain=1.0 f=1760.0 shape=[44100, 2] min=-0.620 max=0.651 elapsed=0.0098s
+- sr=44100 ch=2 mode=Multi gain=0.5 f=220.0 shape=[44100, 2] min=-0.576 max=0.602 elapsed=0.0093s
+- sr=44100 ch=2 mode=Multi gain=0.5 f=440.0 shape=[44100, 2] min=-0.580 max=0.611 elapsed=0.0092s
+- sr=44100 ch=2 mode=Multi gain=0.5 f=880.0 shape=[44100, 2] min=-0.597 max=0.625 elapsed=0.0097s
+- sr=44100 ch=2 mode=Multi gain=0.5 f=1760.0 shape=[44100, 2] min=-0.620 max=0.651 elapsed=0.0093s
+- sr=44100 ch=2 mode=Multi gain=1.0 f=220.0 shape=[44100, 2] min=-0.576 max=0.602 elapsed=0.0091s
+- sr=44100 ch=2 mode=Multi gain=1.0 f=440.0 shape=[44100, 2] min=-0.580 max=0.611 elapsed=0.0095s
+- sr=44100 ch=2 mode=Multi gain=1.0 f=880.0 shape=[44100, 2] min=-0.597 max=0.625 elapsed=0.0092s
+- sr=44100 ch=2 mode=Multi gain=1.0 f=1760.0 shape=[44100, 2] min=-0.620 max=0.651 elapsed=0.0090s
+- sr=44100 ch=6 mode=Mono gain=0.5 f=220.0 shape=[44100, 6] min=-0.575 max=0.602 elapsed=0.0229s
+- sr=44100 ch=6 mode=Mono gain=0.5 f=440.0 shape=[44100, 6] min=-0.582 max=0.610 elapsed=0.0113s
+- sr=44100 ch=6 mode=Mono gain=0.5 f=880.0 shape=[44100, 6] min=-0.597 max=0.625 elapsed=0.0101s
+- sr=44100 ch=6 mode=Mono gain=0.5 f=1760.0 shape=[44100, 6] min=-0.620 max=0.651 elapsed=0.0102s
+- sr=44100 ch=6 mode=Mono gain=1.0 f=220.0 shape=[44100, 6] min=-0.575 max=0.602 elapsed=0.0101s
+- sr=44100 ch=6 mode=Mono gain=1.0 f=440.0 shape=[44100, 6] min=-0.582 max=0.610 elapsed=0.0116s
+- sr=44100 ch=6 mode=Mono gain=1.0 f=880.0 shape=[44100, 6] min=-0.597 max=0.625 elapsed=0.0103s
+- sr=44100 ch=6 mode=Mono gain=1.0 f=1760.0 shape=[44100, 6] min=-0.620 max=0.651 elapsed=0.0101s
+- sr=44100 ch=6 mode=Multi gain=0.5 f=220.0 shape=[44100, 6] min=-0.575 max=0.602 elapsed=0.0102s
+- sr=44100 ch=6 mode=Multi gain=0.5 f=440.0 shape=[44100, 6] min=-0.582 max=0.610 elapsed=0.0104s
+- sr=44100 ch=6 mode=Multi gain=0.5 f=880.0 shape=[44100, 6] min=-0.597 max=0.625 elapsed=0.0104s
+- sr=44100 ch=6 mode=Multi gain=0.5 f=1760.0 shape=[44100, 6] min=-0.620 max=0.651 elapsed=0.0116s
+- sr=44100 ch=6 mode=Multi gain=1.0 f=220.0 shape=[44100, 6] min=-0.575 max=0.602 elapsed=0.0105s
+- sr=44100 ch=6 mode=Multi gain=1.0 f=440.0 shape=[44100, 6] min=-0.582 max=0.610 elapsed=0.0116s
+- sr=44100 ch=6 mode=Multi gain=1.0 f=880.0 shape=[44100, 6] min=-0.597 max=0.625 elapsed=0.0193s
+- sr=44100 ch=6 mode=Multi gain=1.0 f=1760.0 shape=[44100, 6] min=-0.620 max=0.651 elapsed=0.0158s
+- sr=48000 ch=1 mode=Mono gain=0.5 f=220.0 shape=[48000, 1] min=-0.573 max=0.603 elapsed=0.0102s
+- sr=48000 ch=1 mode=Mono gain=0.5 f=440.0 shape=[48000, 1] min=-0.577 max=0.611 elapsed=0.0094s
+- sr=48000 ch=1 mode=Mono gain=0.5 f=880.0 shape=[48000, 1] min=-0.597 max=0.626 elapsed=0.0094s
+- sr=48000 ch=1 mode=Mono gain=0.5 f=1760.0 shape=[48000, 1] min=-0.618 max=0.656 elapsed=0.0095s
+- sr=48000 ch=1 mode=Mono gain=1.0 f=220.0 shape=[48000, 1] min=-0.573 max=0.603 elapsed=0.0133s
+- sr=48000 ch=1 mode=Mono gain=1.0 f=440.0 shape=[48000, 1] min=-0.577 max=0.611 elapsed=0.0101s
+- sr=48000 ch=1 mode=Mono gain=1.0 f=880.0 shape=[48000, 1] min=-0.597 max=0.626 elapsed=0.0095s
+- sr=48000 ch=1 mode=Mono gain=1.0 f=1760.0 shape=[48000, 1] min=-0.618 max=0.656 elapsed=0.0094s
+- sr=48000 ch=1 mode=Multi gain=0.5 f=220.0 shape=[48000, 1] min=-0.573 max=0.603 elapsed=0.0094s
+- sr=48000 ch=1 mode=Multi gain=0.5 f=440.0 shape=[48000, 1] min=-0.577 max=0.611 elapsed=0.0093s
+- sr=48000 ch=1 mode=Multi gain=0.5 f=880.0 shape=[48000, 1] min=-0.597 max=0.626 elapsed=0.0101s
+- sr=48000 ch=1 mode=Multi gain=0.5 f=1760.0 shape=[48000, 1] min=-0.618 max=0.656 elapsed=0.0094s
+- sr=48000 ch=1 mode=Multi gain=1.0 f=220.0 shape=[48000, 1] min=-0.573 max=0.603 elapsed=0.0186s
+- sr=48000 ch=1 mode=Multi gain=1.0 f=440.0 shape=[48000, 1] min=-0.577 max=0.611 elapsed=0.0094s
+- sr=48000 ch=1 mode=Multi gain=1.0 f=880.0 shape=[48000, 1] min=-0.597 max=0.626 elapsed=0.0094s
+- sr=48000 ch=1 mode=Multi gain=1.0 f=1760.0 shape=[48000, 1] min=-0.618 max=0.656 elapsed=0.0095s
+- sr=48000 ch=2 mode=Mono gain=0.5 f=220.0 shape=[48000, 2] min=-0.573 max=0.603 elapsed=0.0113s
+- sr=48000 ch=2 mode=Mono gain=0.5 f=440.0 shape=[48000, 2] min=-0.577 max=0.611 elapsed=0.0097s
+- sr=48000 ch=2 mode=Mono gain=0.5 f=880.0 shape=[48000, 2] min=-0.597 max=0.626 elapsed=0.0097s
+- sr=48000 ch=2 mode=Mono gain=0.5 f=1760.0 shape=[48000, 2] min=-0.618 max=0.656 elapsed=0.0095s
+- sr=48000 ch=2 mode=Mono gain=1.0 f=220.0 shape=[48000, 2] min=-0.573 max=0.603 elapsed=0.0097s
+- sr=48000 ch=2 mode=Mono gain=1.0 f=440.0 shape=[48000, 2] min=-0.577 max=0.611 elapsed=0.0138s
+- sr=48000 ch=2 mode=Mono gain=1.0 f=880.0 shape=[48000, 2] min=-0.597 max=0.626 elapsed=0.0107s
+- sr=48000 ch=2 mode=Mono gain=1.0 f=1760.0 shape=[48000, 2] min=-0.618 max=0.656 elapsed=0.0099s
+- sr=48000 ch=2 mode=Multi gain=0.5 f=220.0 shape=[48000, 2] min=-0.573 max=0.603 elapsed=0.0097s
+- sr=48000 ch=2 mode=Multi gain=0.5 f=440.0 shape=[48000, 2] min=-0.577 max=0.611 elapsed=0.0098s
+- sr=48000 ch=2 mode=Multi gain=0.5 f=880.0 shape=[48000, 2] min=-0.597 max=0.626 elapsed=0.0098s
+- sr=48000 ch=2 mode=Multi gain=0.5 f=1760.0 shape=[48000, 2] min=-0.618 max=0.656 elapsed=0.0099s
+- sr=48000 ch=2 mode=Multi gain=1.0 f=220.0 shape=[48000, 2] min=-0.573 max=0.603 elapsed=0.0096s
+- sr=48000 ch=2 mode=Multi gain=1.0 f=440.0 shape=[48000, 2] min=-0.577 max=0.611 elapsed=0.0096s
+- sr=48000 ch=2 mode=Multi gain=1.0 f=880.0 shape=[48000, 2] min=-0.597 max=0.626 elapsed=0.0096s
+- sr=48000 ch=2 mode=Multi gain=1.0 f=1760.0 shape=[48000, 2] min=-0.618 max=0.656 elapsed=0.0113s
+- sr=48000 ch=6 mode=Mono gain=0.5 f=220.0 shape=[48000, 6] min=-0.572 max=0.603 elapsed=0.0109s
+- sr=48000 ch=6 mode=Mono gain=0.5 f=440.0 shape=[48000, 6] min=-0.577 max=0.611 elapsed=0.0105s
+- sr=48000 ch=6 mode=Mono gain=0.5 f=880.0 shape=[48000, 6] min=-0.597 max=0.626 elapsed=0.0103s
+- sr=48000 ch=6 mode=Mono gain=0.5 f=1760.0 shape=[48000, 6] min=-0.617 max=0.656 elapsed=0.0105s
+- sr=48000 ch=6 mode=Mono gain=1.0 f=220.0 shape=[48000, 6] min=-0.572 max=0.603 elapsed=0.0102s
+- sr=48000 ch=6 mode=Mono gain=1.0 f=440.0 shape=[48000, 6] min=-0.577 max=0.611 elapsed=0.0104s
+- sr=48000 ch=6 mode=Mono gain=1.0 f=880.0 shape=[48000, 6] min=-0.597 max=0.626 elapsed=0.0131s
+- sr=48000 ch=6 mode=Mono gain=1.0 f=1760.0 shape=[48000, 6] min=-0.617 max=0.656 elapsed=0.0118s
+- sr=48000 ch=6 mode=Multi gain=0.5 f=220.0 shape=[48000, 6] min=-0.572 max=0.603 elapsed=0.0110s
+- sr=48000 ch=6 mode=Multi gain=0.5 f=440.0 shape=[48000, 6] min=-0.577 max=0.611 elapsed=0.0105s
+- sr=48000 ch=6 mode=Multi gain=0.5 f=880.0 shape=[48000, 6] min=-0.597 max=0.626 elapsed=0.0111s
+- sr=48000 ch=6 mode=Multi gain=0.5 f=1760.0 shape=[48000, 6] min=-0.617 max=0.656 elapsed=0.0112s
+- sr=48000 ch=6 mode=Multi gain=1.0 f=220.0 shape=[48000, 6] min=-0.572 max=0.603 elapsed=0.0107s
+- sr=48000 ch=6 mode=Multi gain=1.0 f=440.0 shape=[48000, 6] min=-0.577 max=0.611 elapsed=0.0118s
+- sr=48000 ch=6 mode=Multi gain=1.0 f=880.0 shape=[48000, 6] min=-0.597 max=0.626 elapsed=0.0108s
+- sr=48000 ch=6 mode=Multi gain=1.0 f=1760.0 shape=[48000, 6] min=-0.617 max=0.656 elapsed=0.0107s

@@ -5,6 +5,7 @@ requires-python = ">=3.8"
 dependencies = [
     "numpy",
     "pedalboard",
+    "scipy",
 ]
 
 [tool.pytest.ini_options]
