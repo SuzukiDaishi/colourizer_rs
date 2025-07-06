@@ -58,6 +58,9 @@ struct ColourizerRsParams {
     pub a_sharp: FloatParam,
     #[id = "b"]
     pub b: FloatParam,
+    /// Dry/wet mix between 0 (dry) and 1 (wet)
+    #[id = "dry_wet"]
+    pub dry_wet: FloatParam,
     /// Processing mode: mono or multi-channel
     #[id = "mode"]
     pub mode: EnumParam<ProcessingMode>,
@@ -163,6 +166,7 @@ impl Default for ColourizerRsParams {
                 MIYAKO_BUSHI[11],
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             ),
+            dry_wet: FloatParam::new("Dry/Wet", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
             mode: EnumParam::new("Processing Mode", ProcessingMode::Mono),
         }
     }
@@ -276,6 +280,7 @@ impl Plugin for ColourizerRs {
         match self.params.mode.value() {
             ProcessingMode::Mono => {
                 self.filterbank.set_gains(note_gains);
+                let mix = self.params.dry_wet.value();
                 for mut samples in buffer.iter_samples() {
                     let gain = self.params.gain.smoothed.next();
                     let mut sum = 0.0;
@@ -285,7 +290,8 @@ impl Plugin for ColourizerRs {
                     let input_sum = sum / samples.len() as f32;
                     let processed = self.filterbank.process_sample(input_sum) * gain;
                     for sample in samples.iter_mut() {
-                        *sample = processed;
+                        let dry = *sample;
+                        *sample = dry * (1.0 - mix) + processed * mix;
                     }
                 }
             }
@@ -300,12 +306,15 @@ impl Plugin for ColourizerRs {
                     fb.set_gains(note_gains);
                 }
                 let gain = self.params.gain.smoothed.next();
+                let mix = self.params.dry_wet.value();
                 channels
                     .par_iter_mut()
                     .zip(self.filterbanks.par_iter_mut())
                     .for_each(|(ch, fb)| {
                         for sample in ch.iter_mut() {
-                            *sample = fb.process_sample(*sample) * gain;
+                            let dry = *sample;
+                            let wet = fb.process_sample(dry) * gain;
+                            *sample = dry * (1.0 - mix) + wet * mix;
                         }
                     });
             }
@@ -342,3 +351,84 @@ impl Vst3Plugin for ColourizerRs {
 
 nih_export_clap!(ColourizerRs);
 nih_export_vst3!(ColourizerRs);
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use nih_plug::prelude::*;
+
+    struct DummyContext;
+
+    impl ProcessContext<ColourizerRs> for DummyContext {
+        fn plugin_api(&self) -> PluginApi {
+            PluginApi::Vst3
+        }
+
+        fn execute_background(&self, _task: ()) {}
+        fn execute_gui(&self, _task: ()) {}
+        fn transport(&self) -> &Transport {
+            panic!("unused")
+        }
+        fn next_event(&mut self) -> Option<PluginNoteEvent<ColourizerRs>> {
+            None
+        }
+        fn send_event(&mut self, _event: PluginNoteEvent<ColourizerRs>) {}
+        fn set_latency_samples(&self, _samples: u32) {}
+        fn set_current_voice_capacity(&self, _capacity: u32) {}
+    }
+
+    fn plugin_with_mix(mix: f32) -> ColourizerRs {
+        let mut params = ColourizerRsParams::default();
+        params.dry_wet = FloatParam::new("Dry/Wet", mix, FloatRange::Linear { min: 0.0, max: 1.0 });
+        ColourizerRs {
+            params: Arc::new(params),
+            filterbank: FilterBank::new(44_100.0),
+            filterbanks: Vec::new(),
+            sample_rate: 44_100.0,
+        }
+    }
+
+    fn run_once(mut p: ColourizerRs) -> Vec<f32> {
+        let mut data = vec![1.0; 16];
+        let mut buffer = Buffer::default();
+        unsafe {
+            buffer.set_slices(data.len(), |s| {
+                *s = vec![data.as_mut_slice()];
+            });
+        }
+        let mut aux = AuxiliaryBuffers {
+            inputs: &mut [],
+            outputs: &mut [],
+        };
+        let mut ctx = DummyContext;
+        p.process(&mut buffer, &mut aux, &mut ctx);
+        data
+    }
+
+    #[test]
+    fn dry_only_passes_input() {
+        let out = run_once(plugin_with_mix(0.0));
+        for s in out {
+            assert!((s - 1.0).abs() < 1e-6);
+        }
+    }
+
+    #[test]
+    fn wet_only_blocks_without_filters() {
+        let out = run_once(plugin_with_mix(1.0));
+        for s in out {
+            assert!(s.abs() < 1e-6);
+        }
+    }
+
+    #[test]
+    fn half_mix_interpolates() {
+        let dry = run_once(plugin_with_mix(0.0));
+        let wet = run_once(plugin_with_mix(1.0));
+        let half = run_once(plugin_with_mix(0.5));
+        for ((d, w), h) in dry.iter().zip(wet.iter()).zip(half.iter()) {
+            let expected = 0.5 * (*d) + 0.5 * (*w);
+            assert!((*h - expected).abs() < 1e-6);
+        }
+    }
+}
