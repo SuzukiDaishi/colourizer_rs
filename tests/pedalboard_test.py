@@ -30,10 +30,11 @@ def _set_parameter(plugin, name: str, value: float) -> None:
                 break
 
 
-def run_case(sample_rate: int, channels: int, freq: float, gain: float, mode: str) -> dict:
+def run_case(sample_rate: int, channels: int, freq: float, gain: float, mode: str, mix: float) -> dict:
     plugin = load_plugin(PLUGIN_PATH)
     _set_parameter(plugin, "Gain", gain)
     _set_parameter(plugin, "Processing Mode", mode)
+    _set_parameter(plugin, "Dry/Wet", mix)
     board = Pedalboard([plugin])
 
     n = sample_rate
@@ -58,6 +59,7 @@ def run_case(sample_rate: int, channels: int, freq: float, gain: float, mode: st
         "max": float(processed.max()),
         "elapsed_sec": elapsed,
         "mode": mode,
+        "mix": mix,
     }
 
 
@@ -67,8 +69,9 @@ def main() -> None:
         for ch in (1, 2, 6):
             for mode in ("Mono", "Multi"):
                 for gain in (0.5, 1.0):
-                    for freq in (220.0, 440.0, 880.0, 1760.0):
-                        results.append(run_case(sr, ch, freq, gain, mode))
+                    for mix in (0.0, 1.0):
+                        for freq in (220.0, 440.0, 880.0, 1760.0):
+                            results.append(run_case(sr, ch, freq, gain, mode, mix))
 
     (RESULTS_DIR / "test_results.md").write_text(
         "# Python pedalboard test results\n\n"
@@ -77,7 +80,7 @@ def main() -> None:
         for r in results:
             f.write(
                 f"- sr={r['sample_rate']} ch={r['channels']} mode={r['mode']} "
-                f"gain={r['gain']} f={r['frequency']} "
+                f"gain={r['gain']} mix={r['mix']} f={r['frequency']} "
                 f"shape={r['shape']} min={r['min']:.3f} max={r['max']:.3f} "
                 f"elapsed={r['elapsed_sec']:.4f}s\n"
             )
